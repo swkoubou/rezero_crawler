@@ -36,7 +36,9 @@ class ReZero
 	end
 
 	def add_url(url)
-		
+		if url_exist(url)
+			@db.execute("insert into products (url) values (?)", url)
+		end
 	end
 
 	def preview()
