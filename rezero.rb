@@ -4,6 +4,7 @@
 # -r:	価格情報更新
 # -d: URL削除
 require 'sqlite3'
+require 'open-uri'
 
 # コマンドライン引数をパースして動作を変える
 if ARGV.size == 0
@@ -25,14 +26,17 @@ end
 
 class ReZero
 	def initialize()
-		db = SQLite3::Database.new 'rezero.db'
-		result = db.execute('select * from sqlite_master where type="table"')
+		@db = SQLite3::Database.new 'rezero.db'
+
+		# テーブルが存在しない場合にデフォルトのデータを作る
+		result = @db.execute('select * from sqlite_master where type="table"')
 		if result.empty?
 			create_default_table()
 		end
 	end
 
 	def add_url(url)
+		
 	end
 
 	def preview()
@@ -58,7 +62,21 @@ class ReZero
 		);
 		SQL
 		
-		db.execute(sql)
+		@db.execute(sql)
+	end
+
+	def url_exist(url)
+		if !url.start_with?("http")
+			return false
+		end
+
+		begin
+			open(url)
+		rescue
+			return false
+		else
+			return true
+		end
 	end
 end
 
