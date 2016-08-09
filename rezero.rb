@@ -48,6 +48,9 @@ class ReZero
 	end
 
 	def get_url_list()
+		@db.execute("select id, name, url from products") do |row|
+			puts "#{row[0]}: #{row[1]}: #{row[2]}"
+		end
 	end
 
 	def reload()
