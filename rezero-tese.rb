@@ -15,7 +15,7 @@ Anemone.crawl(url, opts) do |anemone|
     
     title = doc.xpath("/html/body/div[2]/div[4]/div[6]/div[1]/div/h1/span").text
     price = doc.xpath("/html/body/div[2]/div[4]/div[6]/div[5]/div/table/tbody/tr[2]/td[2]").text
-    puts title + price
+    puts title +"/" price
   end
 end
 
