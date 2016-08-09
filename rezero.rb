@@ -56,7 +56,8 @@ class ReZero
 	def reload()
 	end
 
-	def delete_url(url)
+	def delete(id)
+		@db.execute("delete from products where id=#{id}")
 	end
 
 	private
