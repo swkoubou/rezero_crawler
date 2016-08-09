@@ -16,9 +16,10 @@ Anemone.crawl(url, opts) do |anemone|
   anemone.on_every_page do |page|
     doc = Nokogiri::HTML.parse(page.body.toutf8)
       title = doc.xpath("//div[@class='centerColAlign']/div/div/h1/span").text
+      price = doc.xpath("//div[@class='centerColAlign']//table/tr[2]/td[2]/span[1]").text 
       print(title.strip)
       print("\n")
-      print(page.url)
-      print("\n")
+      print(price)
+      print("\n")      
   end # page終わり
 end # Anemone終わり
