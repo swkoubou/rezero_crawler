@@ -25,10 +25,14 @@ end
 
 class ReZero
 	def initialize()
-		db = SQLite3::Database.new 'rezer.db'
+		db = SQLite3::Database.new 'rezero.db'
+		result = db.execute('select * from sqlite_master where type="table"')
+		if result.empty?
+			create_default_table()
+		end
 	end
 
-	def add_url()
+	def add_url(url)
 	end
 
 	def preview()
@@ -41,6 +45,20 @@ class ReZero
 	end
 
 	def delete_url(url)
+	end
+
+	private
+	def create_default_table()
+		sql = <<-SQL
+		create table products (
+			id integer primary key,
+			url text not null,
+			price integer,
+			name text
+		);
+		SQL
+		
+		db.execute(sql)
 	end
 end
 
