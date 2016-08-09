@@ -1,0 +1,5 @@
+gem "sqlite3"
+gem "nokogiri"
+gem "open-uri"
+gem "anemone"
+gem "kconv"
