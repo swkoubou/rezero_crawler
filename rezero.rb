@@ -42,6 +42,9 @@ class ReZero
 	end
 
 	def preview()
+		@db.execute("select url, name, price from products") do |row|
+			puts "#{row[1]}: #{row[2]}円"
+		end
 	end
 
 	def get_url_list()
