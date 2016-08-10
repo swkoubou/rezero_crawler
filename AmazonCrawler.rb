@@ -1,16 +1,16 @@
 require 'nokogiri'
 require 'anemone'
-require 'kkonv'
+require 'kconv'
 
 class AmazonCrawler
 　def initialize(url)
     @url = url
     opts = {
-	depth_limit: 0
+        depth_limit: 0
     }
     Anemone.crawl(@url, opts) do |anemone|
       anemone.on_every_page do |page|
-	@doc = Nokogiri::HTML.parse(page.body.toutf8)
+        @doc = Nokogiri::HTML.parse(page.body.toutf8)
       end
     end	
   end
@@ -25,4 +25,3 @@ class AmazonCrawler
     return price
   end
 end
-
