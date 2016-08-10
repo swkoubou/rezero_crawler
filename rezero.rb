@@ -5,24 +5,8 @@
 # -d: URL削除
 require 'sqlite3'
 require 'open-uri'
+require './AmazonCrawler.rb'
 
-# コマンドライン引数をパースして動作を変える
-if ARGV.size == 0
-	puts "This function will be comming soon :)"
-elsif ARGV[0] == '-a'
-	puts "This function will be comming soon :)"
-elsif ARGV[0] == '-l'
-	puts "This function will be comming soon :)"
-elsif ARGV[0] == '-r'
-	puts "This function will be comming soon :)"
-elsif ARGV[0] == '-d'
-	puts "This function will be comming soon :)"
-elsif ARGV[0] == '--help'
-	puts "This function will be comming soon :)"
-else
-	puts "This option is invalid."
-	puts "See 'rezero --help'"
-end
 
 class ReZero
 	def initialize()
@@ -54,6 +38,17 @@ class ReZero
 	end
 
 	def reload()
+		@db.execute("select id, url from products") do |row|
+			# amazonから価格情報と商品名を取得
+			id = row[0]
+			url = row[1]
+			amazon = AmazonCrawler.new(url)
+			price = amazon.price()
+			name = amazon.name()
+
+			# DBに登録
+			@db.execute("update products set price=#{price}, name=(?) where id=#{id}", name)
+		end
 	end
 
 	def delete(id)
@@ -75,12 +70,12 @@ class ReZero
 	end
 
 	def url_exist(url)
-		if !url.start_with?("http")
+		if !url.start_with?("https://www.amazon.")
 			return false
 		end
 
 		begin
-			open(url)
+			#open(url)	# amazonにアクセスが弾かれてるから消した
 		rescue
 			return false
 		else
@@ -89,3 +84,43 @@ class ReZero
 	end
 end
 
+# コマンドライン引数をパースして動作を変える
+help = <<-HELP
+USAGE: rezero.rb [OPTION] [STRING]
+
+OPTIONS:
+ -a:	URL追加
+			rezero.rb -a "[URL]"
+ -l:	URLリスト表示
+ -r:	価格情報更新
+ -d:	URL削除
+			rezero.rb -d "[ID]"
+HELP
+
+re = ReZero.new
+if ARGV.size == 0
+	re.preview()
+elsif ARGV[0] == '-a'
+	if ARGV[1].nil?
+		puts "Need [URL]"
+		puts "See 'rezero --help'"
+	else
+		re.add_url(ARGV[1])
+	end
+elsif ARGV[0] == '-l'
+	re.get_url_list()
+elsif ARGV[0] == '-r'
+	re.reload()
+elsif ARGV[0] == '-d'
+	if ARGV[1].nil?
+		puts "Need [ID]"
+		puts "See 'rezero --help'"
+	else
+		re.delete(ARGV[1].to_i)
+	end
+elsif ARGV[0] == '--help'
+	puts help
+else
+	puts "This option is invalid."
+	puts "See 'rezero --help'"
+end
