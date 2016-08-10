@@ -13,15 +13,16 @@ class AmazonCrawler
 	@doc = Nokogiri::HTML.parse(page.body.toutf8)
       end
     end	
-
   end
 
-  def Name()
-    @name = @doc.xpath("//div[@class='centerColAlign']/div/div/h1/span").text
+  def name()
+    name = @doc.xpath("//div[@class='centerColAlign']/div/div/h1/span").text.strip
+    return name
   end
 
-  def Price()
-    @price = @doc.xpath(("//div[@class='centerColAlign']//table/tr[2]/td[2]/span[1]").text
+  def price()
+    price = @doc.xpath("//div[@class='centerColAlign']//table/tr[2]/td[2]/span[1]").text.strip.delete("¥ ,").to_i
+    return price
   end
 end
 
