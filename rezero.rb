@@ -63,7 +63,7 @@ class ReZero
 		end
 
 		begin
-			open(url)
+			#open(url)	# amazonにアクセスが弾かれてるから消した
 		rescue
 			return false
 		else
