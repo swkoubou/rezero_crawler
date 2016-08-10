@@ -5,6 +5,7 @@
 # -d: URL削除
 require 'sqlite3'
 require 'open-uri'
+require './AmazonCrawler.rb'
 
 
 class ReZero
@@ -37,6 +38,17 @@ class ReZero
 	end
 
 	def reload()
+		@db.execute("select id, url from products") do |row|
+			# amazonから価格情報と商品名を取得
+			id = row[0]
+			url = row[1]
+			amazon = AmazonCrawler.new(url)
+			price = amazon.price()
+			name = amazon.name()
+
+			# DBに登録
+			@db.execute("update products set price=#{price}, name=(?) where id=#{id}", name)
+		end
 	end
 
 	def delete(id)
@@ -98,7 +110,7 @@ elsif ARGV[0] == '-a'
 elsif ARGV[0] == '-l'
 	re.get_url_list()
 elsif ARGV[0] == '-r'
-	puts "This function will be comming soon :)"
+	re.reload()
 elsif ARGV[0] == '-d'
 	if ARGV[1].nil?
 		puts "Need [ID]"
