@@ -58,7 +58,7 @@ class ReZero
 	end
 
 	def url_exist(url)
-		if !url.start_with?("http")
+		if !url.start_with?("https://www.amazon.")
 			return false
 		end
 
