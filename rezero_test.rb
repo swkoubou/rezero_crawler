@@ -15,9 +15,9 @@ url.push("https://www.amazon.co.jp/Re-%E3%82%BC%E3%83%AD%E3%81%8B%E3%82%89%E5%A7
 Anemone.crawl(url, opts) do |anemone|
   anemone.on_every_page do |page|
     doc = Nokogiri::HTML.parse(page.body.toutf8)
-      title = doc.xpath("//div[@class='centerColAlign']/div/div/h1/span").text
-      price = doc.xpath("//div[@class='centerColAlign']//table/tr[2]/td[2]/span[1]").text 
-      print(title.strip)
+      title = doc.xpath("//div[@class='centerColAlign']/div/div/h1/span").text.strip
+      price = doc.xpath("//div[@class='centerColAlign']//table/tr[2]/td[2]/span[1]").text.strip.delete("¥ ,").to_i 
+      print(title)
       print("\n")
       print(price)
       print("\n")      
