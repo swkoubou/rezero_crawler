@@ -15,7 +15,9 @@ Anemone.crawl(url, opts) do |anemone|
       title = doc.xpath("//div[@class='centerColAlign']/div/div/h1/span").text
       price = doc.xpath("//div[@class='centerColAlign']//table/tr[2]/td[2]/span[1]").text 
       print(title.strip)
+      print("\n")
       print(price.delete("¥ "))
+      print("\n")
   end
 end
 
